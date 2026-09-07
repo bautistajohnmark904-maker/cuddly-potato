@@ -1,42 +1,276 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DCIT26 Lab 1 - Modern Dashboard</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>John Mark Bautista — Find Me If You Can't</title>
+<meta name="description" content="John Mark Bautista — BSIT 3-6. Gym, electric guitar, and psychology books.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800;900&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="glass-card">
-        <header>
-            <span class="badge">DCIT-26 Lab Activity</span>
-            <h1>Interactive Webpage</h1>
-            <p>Designed with external CSS, dynamic JavaScript, and responsive layout.</p>
-        </header>
 
-        <main>
-            <div class="interactive-box">
-                <button id="clickBtn">Click to Interact</button>
-                <p id="message">Ready for your action!</p>
-            </div>
+<!-- ===== NAV ===== -->
+<header class="site-header" id="siteHeader">
+  <div class="nav-inner">
+    <a href="#top" class="logo">JM<span class="logo-dot">.</span></a>
 
-            <div class="stats-container">
-                <div class="stat-card">
-                    <h3>Status</h3>
-                    <p id="statusText">Active</p>
-                </div>
-                <div class="stat-card">
-                    <h3>Total Clicks</h3>
-                    <p id="clickCount">0</p>
-                </div>
-            </div>
-        </main>
+    <nav class="nav-links" id="navLinks">
+      <a href="#top" class="nav-link active" data-nav>Home</a>
+      <a href="#into" class="nav-link" data-nav>Into</a>
+      <a href="#shelf" class="nav-link" data-nav>Shelf</a>
+      <a href="#about" class="nav-link" data-nav>About</a>
+      <a href="#contact" class="nav-link nav-cta" data-nav>Say hi</a>
+    </nav>
 
-        <footer>
-            <p>&copy; 2026 Student Lab Project</p>
-        </footer>
+    <button class="menu-toggle" id="menuToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero" id="top">
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <p class="hero-kicker">John Mark Bautista &mdash; BSIT 3rd Year, Block 6</p>
+        <h1 class="hero-title">
+          <span class="reveal">FIND ME</span>
+          <span class="reveal">IF YOU</span>
+          <span class="reveal hero-title-accent">CAN'T.</span>
+        </h1>
+        <p class="hero-sub reveal">
+          Probably deadlifting, deep in a psychology chapter, or chasing the
+          right riff on an electric guitar. Pick a wrong time and I'm doing
+          two of the three at once.
+        </p>
+        <div class="hero-actions reveal">
+          <a href="#into" class="btn btn-primary">See what I'm into</a>
+          <a href="#contact" class="btn btn-ghost">Get in touch</a>
+        </div>
+      </div>
+
+      <div class="hero-visual reveal">
+        <div class="blob-frame">
+          <img src="https://images.unsplash.com/photo-1490915829216-3f2347b1e830?auto=format&fit=crop&w=900&q=80"
+               alt="Silhouette of a guitarist playing electric guitar on stage"
+               class="blob-img" loading="eager">
+        </div>
+        <div class="sticker" aria-hidden="true">
+          <svg viewBox="0 0 120 120" class="sticker-ring">
+            <path id="stickerCircle" d="M 60,60 m -48,0 a 48,48 0 1,1 96,0 a 48,48 0 1,1 -96,0" fill="none"/>
+            <text font-size="10.2" letter-spacing="1.5" fill="currentColor">
+              <textPath href="#stickerCircle" startOffset="0%">
+                JOHN MARK &#8226; BSIT 3-6 &#8226; DCIT-26 &#8226;
+              </textPath>
+            </text>
+          </svg>
+          <span class="sticker-center">JM</span>
+        </div>
+        <svg class="doodle-arrow" viewBox="0 0 80 60" aria-hidden="true">
+          <path d="M4 8 C 30 4, 55 18, 60 42" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <path d="M48 36 L60 46 L70 32" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== MARQUEE STRIP ===== -->
+  <div class="marquee-strip" role="presentation" aria-hidden="true">
+    <div class="marquee-track">
+      <span>GYM SESSIONS</span><span class="dot">&#8226;</span>
+      <span>PSYCHOLOGY DEEP DIVES</span><span class="dot">&#8226;</span>
+      <span>ELECTRIC GUITAR</span><span class="dot">&#8226;</span>
+      <span>GYM SESSIONS</span><span class="dot">&#8226;</span>
+      <span>PSYCHOLOGY DEEP DIVES</span><span class="dot">&#8226;</span>
+      <span>ELECTRIC GUITAR</span><span class="dot">&#8226;</span>
+      <span>GYM SESSIONS</span><span class="dot">&#8226;</span>
+      <span>PSYCHOLOGY DEEP DIVES</span><span class="dot">&#8226;</span>
+      <span>ELECTRIC GUITAR</span><span class="dot">&#8226;</span>
+    </div>
+  </div>
+
+  <!-- ===== BENTO: WHAT I'M INTO ===== -->
+  <section class="bento" id="into">
+    <div class="section-head">
+      <h2>What I'm actually into</h2>
+      <p>Three things fight for my free time. Here's how each one is going.</p>
     </div>
 
-    <script src="script.js"></script>
+    <div class="bento-grid">
+
+      <!-- GYM CARD -->
+      <article class="bento-card card-gym">
+        <div class="card-photo" style="background-image:url('https://images.unsplash.com/photo-1526506118085-60ce8714f8c5?auto=format&fit=crop&w=800&q=70')"></div>
+        <div class="card-body">
+          <h3>Gym days</h3>
+          <p>Consistency over intensity — that's the whole philosophy.</p>
+
+          <div class="stat-row" data-counters>
+            <div class="stat">
+              <span class="stat-num" data-target="5" data-suffix="">0</span>
+              <span class="stat-label">days trained / week</span>
+            </div>
+            <div class="stat">
+              <span class="stat-num" data-target="80" data-suffix="kg">0</span>
+              <span class="stat-label">current bench PR</span>
+            </div>
+            <div class="stat">
+              <span class="stat-num" data-target="12" data-suffix="wk">0</span>
+              <span class="stat-label">streak, no skips</span>
+            </div>
+          </div>
+          <p class="card-note">*Numbers are placeholders — swap in your real stats.</p>
+        </div>
+      </article>
+
+      <!-- GUITAR CARD -->
+      <article class="bento-card card-guitar">
+        <div class="card-body">
+          <h3>Six strings, plugged in</h3>
+          <p>Currently working on barre chords and pentatonic runs. Here's an actual metronome — try it.</p>
+
+          <div class="metronome" data-metronome>
+            <button type="button" class="metro-btn" id="metroToggle" aria-pressed="false">
+              <svg id="metroIcon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+                <polygon points="6,4 20,12 6,20" fill="currentColor"/>
+              </svg>
+              <span id="metroLabel">Play</span>
+            </button>
+            <div class="metro-controls">
+              <input type="range" id="bpmSlider" min="40" max="220" value="120" aria-label="Beats per minute">
+              <span class="bpm-readout"><span id="bpmValue">120</span> BPM</span>
+            </div>
+            <div class="metro-pulse" id="metroPulse" aria-hidden="true"></div>
+          </div>
+        </div>
+      </article>
+
+      <!-- PSYCHOLOGY CARD -->
+      <article class="bento-card card-books">
+        <div class="card-body">
+          <h3>Currently reading the mind</h3>
+          <p>Psychology books are my other gym — for the brain instead of the biceps.</p>
+
+          <div class="quote-box" id="quoteBox" aria-live="polite">
+            <p id="quoteText">Every habit is just a decision you no longer have to make.</p>
+          </div>
+          <button type="button" class="btn btn-ghost btn-small" id="nextQuoteBtn">Next thought</button>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ===== SHELF ===== -->
+  <section class="shelf" id="shelf">
+    <div class="shelf-inner">
+      <div class="shelf-photo">
+        <img src="https://images.unsplash.com/photo-1681138234408-8043904669a5?auto=format&fit=crop&w=800&q=75" alt="A stack of books on a wooden table" loading="lazy">
+      </div>
+      <div class="shelf-list">
+        <h2>On the shelf right now</h2>
+        <ul class="book-list">
+          <li>
+            <span class="book-title">Thinking, Fast and Slow</span>
+            <span class="book-author">Daniel Kahneman</span>
+          </li>
+          <li>
+            <span class="book-title">Atomic Habits</span>
+            <span class="book-author">James Clear</span>
+          </li>
+          <li>
+            <span class="book-title">The Body Keeps the Score</span>
+            <span class="book-author">Bessel van der Kolk</span>
+          </li>
+          <li>
+            <span class="book-title">Quiet</span>
+            <span class="book-author">Susan Cain</span>
+          </li>
+          <li>
+            <span class="book-title">Man's Search for Meaning</span>
+            <span class="book-author">Viktor Frankl</span>
+          </li>
+        </ul>
+        <p class="card-note">*Sample list — replace with the titles you're actually reading.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ABOUT ===== -->
+  <section class="about" id="about">
+    <div class="about-inner">
+      <div class="about-photo">
+        <img src="https://images.unsplash.com/photo-1611333181866-4dc29fbe376d?auto=format&fit=crop&w=800&q=75" alt="Person standing near a bookshelf">
+      </div>
+      <div class="about-copy">
+        <h2>A bit about me</h2>
+        <p>
+          I'm John Mark, a 3rd year BSIT student under Block 3-6. This page
+          started as a lab activity for DCIT-26, but I figured it should
+          actually sound like me instead of a placeholder website — so it's
+          built around the three things I keep coming back to: the gym,
+          my electric guitar, and whatever psychology book is currently
+          on my desk.
+        </p>
+        <p>
+          Outside of school work, most of my week gets split between reps,
+          riffs, and reading. This site is proof that all three actually
+          fit on one page.
+        </p>
+        <p class="card-note">*Placeholder bio — personalize with your own story.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CONTACT ===== -->
+  <section class="contact" id="contact">
+    <div class="contact-inner">
+      <h2>Say hi</h2>
+      <p>Got something to talk about? Send it straight to my inbox.</p>
+
+      <form id="contactForm" class="contact-form" novalidate>
+        <div class="field">
+          <label for="fromName">Your name</label>
+          <input type="text" id="fromName" name="fromName" required>
+          <span class="error-msg" data-error-for="fromName"></span>
+        </div>
+        <div class="field">
+          <label for="fromEmail">Your email</label>
+          <input type="email" id="fromEmail" name="fromEmail" required>
+          <span class="error-msg" data-error-for="fromEmail"></span>
+        </div>
+        <div class="field">
+          <label for="messageBody">Message</label>
+          <textarea id="messageBody" name="messageBody" rows="4" required></textarea>
+          <span class="error-msg" data-error-for="messageBody"></span>
+        </div>
+        <button type="submit" class="btn btn-primary">Send message</button>
+        <p class="form-status" id="formStatus" role="status"></p>
+      </form>
+
+      <div class="email-copy">
+        <span>Prefer plain email?</span>
+        <button type="button" id="copyEmailBtn" class="btn btn-ghost btn-small">
+          johnmark.bautista@email.com
+        </button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <p>Built by John Mark Bautista &mdash; BSIT 3-6 &mdash; DCIT-26 Lab Activity</p>
+  <p>&copy; <span id="footerYear"></span> John Mark Bautista</p>
+</footer>
+
+<script src="script.js"></script>
 </body>
 </html>
