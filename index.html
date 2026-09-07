@@ -10,7 +10,525 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800;900&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="styles.css">
+<style>
+/* =========================================================
+   TOKENS
+========================================================= */
+:root{
+  --cream:      #F1ECDF;
+  --cream-soft: #FAF7EE;
+  --ink:        #1E2A1C;
+  --green:      #33502C;
+  --green-dark: #223821;
+  --amber:      #E7A33E;
+  --amber-dark: #B87A22;
+  --plum:       #5B3A5C;
+  --plum-dark:  #402642;
+
+  --font-display: "Big Shoulders Display", sans-serif;
+  --font-body: "Work Sans", sans-serif;
+
+  --radius-blob: 42% 58% 61% 39% / 46% 40% 60% 54%;
+  --container: 1180px;
+
+  --ease: cubic-bezier(.22,.9,.32,1);
+}
+
+@media (prefers-reduced-motion: reduce){
+  *{ animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
+}
+
+*, *::before, *::after{ box-sizing: border-box; }
+html{ scroll-behavior: smooth; }
+body{
+  margin:0;
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--font-body);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+img{ max-width:100%; display:block; }
+h1,h2,h3{ font-family: var(--font-display); font-weight: 800; line-height: 0.95; margin:0; }
+p{ margin:0; }
+a{ color:inherit; text-decoration:none; }
+ul{ list-style:none; margin:0; padding:0; }
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible{
+  outline: 3px solid var(--amber);
+  outline-offset: 2px;
+}
+
+.section-head{
+  max-width: 620px;
+  margin: 0 auto 2.5rem;
+  text-align:center;
+}
+.section-head h2{ font-size: clamp(2rem, 4vw, 2.75rem); }
+.section-head p{ margin-top:.6rem; color: rgba(30,42,28,.7); font-size:1.05rem; }
+
+.card-note{
+  font-size: .78rem;
+  color: rgba(30,42,28,.55);
+  margin-top: .9rem;
+  font-style: italic;
+}
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:.5rem;
+  padding: .85rem 1.6rem;
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-weight:600;
+  font-size: .95rem;
+  border: 2px solid transparent;
+  cursor:pointer;
+  transition: transform .18s var(--ease), background .18s var(--ease), color .18s var(--ease), border-color .18s var(--ease);
+  white-space: nowrap;
+}
+.btn-primary{ background: var(--ink); color: var(--cream-soft); }
+.btn-primary:hover{ transform: translateY(-2px); background: var(--green-dark); }
+.btn-ghost{ background: transparent; border-color: currentColor; color: var(--ink); }
+.btn-ghost:hover{ transform: translateY(-2px); background: rgba(30,42,28,.06); }
+.btn-small{ padding: .55rem 1.1rem; font-size: .82rem; }
+
+/* =========================================================
+   HEADER / NAV
+========================================================= */
+.site-header{
+  position: sticky;
+  top:0;
+  z-index: 100;
+  background: rgba(241,236,223,.85);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid transparent;
+  transition: border-color .25s var(--ease), box-shadow .25s var(--ease);
+}
+.site-header.scrolled{
+  border-color: rgba(30,42,28,.12);
+  box-shadow: 0 6px 24px rgba(30,42,28,.06);
+}
+.nav-inner{
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 1rem 1.5rem;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.logo{
+  font-family: var(--font-display);
+  font-weight:800;
+  font-size:1.5rem;
+  letter-spacing: .02em;
+}
+.logo-dot{ color: var(--amber-dark); }
+
+.nav-links{
+  display:flex;
+  align-items:center;
+  gap: 1.8rem;
+}
+.nav-link{
+  font-size:.92rem;
+  font-weight:600;
+  position:relative;
+  padding: .3rem 0;
+  color: rgba(30,42,28,.75);
+  transition: color .2s;
+}
+.nav-link::after{
+  content:"";
+  position:absolute; left:0; right:100%; bottom:-2px;
+  height:2px; background: var(--green);
+  transition: right .25s var(--ease);
+}
+.nav-link:hover, .nav-link.active{ color: var(--ink); }
+.nav-link.active::after{ right:0; }
+.nav-cta{
+  background: var(--ink);
+  color: var(--cream-soft) !important;
+  padding: .55rem 1.15rem;
+  border-radius: 999px;
+}
+.nav-cta::after{ display:none; }
+.nav-cta:hover{ background: var(--green-dark); }
+
+.menu-toggle{
+  display:none;
+  flex-direction:column;
+  justify-content:center;
+  gap:5px;
+  width: 40px; height:40px;
+  background:none; border:none; cursor:pointer;
+  padding:0;
+}
+.menu-toggle span{
+  width: 100%; height:2.5px; background: var(--ink); border-radius:2px;
+  transition: transform .25s var(--ease), opacity .2s;
+}
+.menu-toggle[aria-expanded="true"] span:nth-child(1){ transform: translateY(7.5px) rotate(45deg); }
+.menu-toggle[aria-expanded="true"] span:nth-child(2){ opacity:0; }
+.menu-toggle[aria-expanded="true"] span:nth-child(3){ transform: translateY(-7.5px) rotate(-45deg); }
+
+/* =========================================================
+   HERO
+========================================================= */
+.hero{
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: clamp(2.5rem, 6vw, 5rem) 1.5rem clamp(3rem, 6vw, 5rem);
+}
+.hero-grid{
+  display:grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items:center;
+}
+.hero-kicker{
+  font-size:.85rem;
+  font-weight:600;
+  color: var(--green-dark);
+  margin-bottom: .9rem;
+}
+.hero-title{
+  font-size: clamp(3rem, 8vw, 6rem);
+  letter-spacing: -0.01em;
+  display:flex;
+  flex-direction:column;
+}
+.hero-title-accent{ color: var(--plum); }
+.hero-sub{
+  margin-top: 1.6rem;
+  max-width: 46ch;
+  font-size: 1.1rem;
+  color: rgba(30,42,28,.78);
+}
+.hero-actions{
+  margin-top: 2.2rem;
+  display:flex;
+  gap: 1rem;
+  flex-wrap:wrap;
+}
+
+/* reveal-on-load, single orchestrated moment */
+.reveal{
+  opacity:0;
+  transform: translateY(18px);
+  animation: reveal-up .7s var(--ease) forwards;
+}
+.hero-title .reveal:nth-child(1){ animation-delay: .05s; }
+.hero-title .reveal:nth-child(2){ animation-delay: .16s; }
+.hero-title .reveal:nth-child(3){ animation-delay: .27s; }
+.hero-sub.reveal{ animation-delay: .4s; }
+.hero-actions.reveal{ animation-delay: .52s; }
+.hero-visual.reveal{ animation-delay: .3s; }
+@keyframes reveal-up{
+  to{ opacity:1; transform: translateY(0); }
+}
+
+.hero-visual{ position:relative; }
+.blob-frame{
+  border-radius: var(--radius-blob);
+  overflow:hidden;
+  aspect-ratio: 4 / 5;
+  background: var(--green);
+  box-shadow: 0 30px 60px -20px rgba(30,42,28,.35);
+}
+.blob-img{ width:100%; height:100%; object-fit:cover; filter: grayscale(.15) contrast(1.05); }
+
+.sticker{
+  position:absolute;
+  top: -8%;
+  right: -12%;
+  width: 118px; height:118px;
+  color: var(--ink);
+  animation: spin 22s linear infinite;
+}
+.sticker-ring{ width:100%; height:100%; }
+.sticker-ring text{ font-family: var(--font-body); font-weight:700; text-transform:uppercase; }
+.sticker-center{
+  position:absolute; inset:0;
+  display:flex; align-items:center; justify-content:center;
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight:800;
+  background: var(--amber);
+  border-radius:50%;
+  width: 46px; height:46px;
+  margin:auto;
+  animation: counter-spin 22s linear infinite;
+}
+@keyframes spin{ to{ transform: rotate(360deg); } }
+@keyframes counter-spin{ to{ transform: rotate(-360deg); } }
+
+.doodle-arrow{
+  position:absolute;
+  bottom: 6%;
+  left: -14%;
+  width: 90px; height:70px;
+  color: var(--plum);
+}
+
+/* =========================================================
+   MARQUEE
+========================================================= */
+.marquee-strip{
+  background: var(--ink);
+  color: var(--cream-soft);
+  overflow:hidden;
+  padding: .9rem 0;
+  transform: rotate(-1deg);
+  margin: 1rem 0 2rem;
+}
+.marquee-track{
+  display:flex;
+  gap: 1.2rem;
+  white-space:nowrap;
+  width: max-content;
+  animation: marquee 26s linear infinite;
+  font-family: var(--font-display);
+  font-weight:700;
+  font-size: 1.3rem;
+  letter-spacing:.03em;
+  align-items:center;
+}
+.marquee-track .dot{ color: var(--amber); }
+@keyframes marquee{
+  from{ transform: translateX(0); }
+  to{ transform: translateX(-50%); }
+}
+
+/* =========================================================
+   BENTO
+========================================================= */
+.bento{
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: clamp(2rem,5vw,3rem) 1.5rem 4rem;
+}
+.bento-grid{
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.4rem;
+}
+.bento-card{
+  border-radius: 28px;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  min-height: 420px;
+}
+.card-body{ padding: 1.8rem; display:flex; flex-direction:column; flex:1; }
+.bento-card h3{ font-size: 1.7rem; margin-bottom:.5rem; }
+.bento-card > .card-body > p{ font-size:.95rem; }
+
+.card-gym{ background: var(--green); color: var(--cream-soft); }
+.card-photo{
+  height: 150px;
+  background-size:cover;
+  background-position:center;
+  filter: grayscale(.3);
+}
+.stat-row{
+  display:flex;
+  gap: 1.1rem;
+  margin-top: 1.6rem;
+  flex-wrap:wrap;
+}
+.stat{ display:flex; flex-direction:column; gap:.15rem; }
+.stat-num{
+  font-family: var(--font-display);
+  font-size: 2.1rem;
+  font-weight:800;
+  color: var(--amber);
+}
+.stat-label{ font-size: .72rem; opacity:.85; max-width:9ch; }
+.card-gym .card-note{ color: rgba(250,247,238,.6); }
+
+.card-guitar{ background: var(--amber); color: var(--ink); }
+.metronome{
+  margin-top: 1.8rem;
+  background: rgba(30,42,28,.08);
+  border-radius: 18px;
+  padding: 1.2rem;
+  position:relative;
+}
+.metro-btn{
+  display:flex; align-items:center; gap:.5rem;
+  background: var(--ink); color: var(--cream-soft);
+  border:none; border-radius: 999px;
+  padding:.7rem 1.3rem;
+  font-family: var(--font-body); font-weight:600; font-size:.9rem;
+  cursor:pointer;
+  transition: background .2s;
+}
+.metro-btn:hover{ background: var(--green-dark); }
+.metro-btn[aria-pressed="true"]{ background: var(--plum); }
+.metro-controls{
+  display:flex; align-items:center; gap:.8rem;
+  margin-top: 1rem;
+}
+.metro-controls input[type="range"]{ flex:1; accent-color: var(--plum); }
+.bpm-readout{ font-size:.85rem; font-weight:600; white-space:nowrap; }
+.metro-pulse{
+  position:absolute;
+  top: 1.2rem; right: 1.2rem;
+  width: 14px; height:14px;
+  border-radius:50%;
+  background: var(--plum);
+  opacity:.25;
+  transition: opacity .05s, transform .05s;
+}
+.metro-pulse.pulse-on{ opacity:1; transform: scale(1.4); }
+
+.card-books{ background: var(--plum); color: var(--cream-soft); }
+.quote-box{
+  margin-top: 1.6rem;
+  min-height: 90px;
+  display:flex;
+  align-items:center;
+}
+.quote-box p{ font-size: 1.15rem; font-weight:600; font-family: var(--font-display); line-height:1.15; }
+
+/* =========================================================
+   SHELF
+========================================================= */
+.shelf{ background: var(--cream-soft); padding: clamp(3rem,6vw,5rem) 1.5rem; }
+.shelf-inner{
+  max-width: var(--container);
+  margin:0 auto;
+  display:grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: clamp(2rem,5vw,4rem);
+  align-items:center;
+}
+.shelf-photo img{ border-radius: 24px; aspect-ratio: 4/3; object-fit:cover; }
+.shelf h2{ font-size: clamp(1.9rem,3.5vw,2.5rem); margin-bottom: 1.4rem; }
+.book-list{ display:flex; flex-direction:column; gap: .9rem; }
+.book-list li{
+  display:flex;
+  justify-content:space-between;
+  gap: 1rem;
+  padding-bottom: .9rem;
+  border-bottom: 1px solid rgba(30,42,28,.15);
+}
+.book-title{ font-weight:700; }
+.book-author{ color: rgba(30,42,28,.6); font-size:.92rem; white-space:nowrap; }
+
+/* =========================================================
+   ABOUT
+========================================================= */
+.about{ padding: clamp(3rem,6vw,5rem) 1.5rem; }
+.about-inner{
+  max-width: var(--container);
+  margin:0 auto;
+  display:grid;
+  grid-template-columns: 0.8fr 1.2fr;
+  gap: clamp(2rem,5vw,4rem);
+  align-items:center;
+}
+.about-photo img{ border-radius: var(--radius-blob); aspect-ratio: 1/1; object-fit:cover; }
+.about-copy h2{ font-size: clamp(1.9rem,3.5vw,2.5rem); margin-bottom: 1.2rem; }
+.about-copy p{ margin-bottom: 1rem; color: rgba(30,42,28,.82); max-width: 62ch; }
+
+/* =========================================================
+   CONTACT
+========================================================= */
+.contact{ background: var(--ink); color: var(--cream-soft); padding: clamp(3rem,6vw,5rem) 1.5rem; }
+.contact-inner{ max-width: 640px; margin:0 auto; }
+.contact h2{ font-size: clamp(2rem,4vw,2.75rem); }
+.contact > .contact-inner > p{ margin-top:.6rem; color: rgba(250,247,238,.7); }
+
+.contact-form{ margin-top: 2rem; display:flex; flex-direction:column; gap: 1.2rem; }
+.field{ display:flex; flex-direction:column; gap:.4rem; }
+.field label{ font-size:.85rem; font-weight:600; color: rgba(250,247,238,.85); }
+.field input, .field textarea{
+  background: rgba(250,247,238,.08);
+  border: 1.5px solid rgba(250,247,238,.25);
+  border-radius: 12px;
+  padding: .8rem 1rem;
+  color: var(--cream-soft);
+  font-family: var(--font-body);
+  font-size: .95rem;
+  resize: vertical;
+}
+.field input::placeholder, .field textarea::placeholder{ color: rgba(250,247,238,.4); }
+.field.has-error input, .field.has-error textarea{ border-color: #E27D6A; }
+.error-msg{ font-size:.78rem; color:#E27D6A; min-height:1em; }
+.contact-form .btn-primary{ background: var(--amber); color: var(--ink); align-self:flex-start; }
+.contact-form .btn-primary:hover{ background: var(--amber-dark); }
+.form-status{ font-size:.9rem; color: var(--amber); min-height:1.2em; }
+
+.email-copy{
+  margin-top: 2.2rem;
+  padding-top: 1.6rem;
+  border-top: 1px solid rgba(250,247,238,.18);
+  display:flex;
+  align-items:center;
+  gap: 1rem;
+  flex-wrap:wrap;
+  font-size:.9rem;
+  color: rgba(250,247,238,.7);
+}
+.email-copy .btn-ghost{ border-color: rgba(250,247,238,.4); color: var(--cream-soft); }
+.email-copy .btn-ghost:hover{ background: rgba(250,247,238,.1); }
+
+/* =========================================================
+   FOOTER
+========================================================= */
+.site-footer{
+  text-align:center;
+  padding: 2rem 1.5rem;
+  background: var(--ink);
+  color: rgba(250,247,238,.55);
+  font-size: .82rem;
+  border-top: 1px solid rgba(250,247,238,.12);
+}
+.site-footer p{ margin: .3rem 0; }
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+@media (max-width: 900px){
+  .hero-grid{ grid-template-columns: 1fr; }
+  .hero-visual{ order:-1; max-width: 340px; margin: 0 auto; }
+  .bento-grid{ grid-template-columns: 1fr; }
+  .shelf-inner, .about-inner{ grid-template-columns: 1fr; }
+  .about-photo{ max-width: 280px; margin: 0 auto; }
+}
+
+@media (max-width: 720px){
+  .nav-links{
+    position: fixed;
+    top: 68px; left:0; right:0;
+    background: var(--cream-soft);
+    flex-direction:column;
+    align-items:flex-start;
+    gap: 0;
+    padding: 1rem 1.5rem 1.5rem;
+    transform: translateY(-130%);
+    opacity:0;
+    transition: transform .3s var(--ease), opacity .25s;
+    border-bottom: 1px solid rgba(30,42,28,.1);
+  }
+  .nav-links.open{ transform: translateY(0); opacity:1; }
+  .nav-link{ padding: .8rem 0; width:100%; }
+  .nav-cta{ margin-top:.5rem; text-align:center; }
+  .menu-toggle{ display:flex; }
+  .doodle-arrow{ display:none; }
+}
+
+</style>
 </head>
 <body>
 
@@ -271,6 +789,260 @@
   <p>&copy; <span id="footerYear"></span> John Mark Bautista</p>
 </footer>
 
-<script src="script.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+  /* =========================================================
+     1. STICKY HEADER SHADOW
+  ========================================================= */
+  const header = document.getElementById('siteHeader');
+  const onScroll = () => {
+    header.classList.toggle('scrolled', window.scrollY > 12);
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  /* =========================================================
+     2. MOBILE MENU TOGGLE
+  ========================================================= */
+  const menuToggle = document.getElementById('menuToggle');
+  const navLinks = document.getElementById('navLinks');
+
+  const closeMenu = () => {
+    navLinks.classList.remove('open');
+    menuToggle.setAttribute('aria-expanded', 'false');
+    menuToggle.setAttribute('aria-label', 'Open menu');
+  };
+
+  menuToggle.addEventListener('click', () => {
+    const isOpen = navLinks.classList.toggle('open');
+    menuToggle.setAttribute('aria-expanded', String(isOpen));
+    menuToggle.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
+  });
+
+  navLinks.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', closeMenu);
+  });
+
+  /* =========================================================
+     3. SCROLLSPY — highlight active nav link
+  ========================================================= */
+  const sections = ['top', 'into', 'shelf', 'about', 'contact']
+    .map(id => document.getElementById(id))
+    .filter(Boolean);
+  const navByHref = new Map();
+  document.querySelectorAll('[data-nav]').forEach(a => {
+    navByHref.set(a.getAttribute('href').replace('#', ''), a);
+  });
+
+  const spyObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        document.querySelectorAll('[data-nav]').forEach(a => a.classList.remove('active'));
+        const link = navByHref.get(entry.target.id);
+        if (link) link.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+
+  sections.forEach(sec => spyObserver.observe(sec));
+
+  /* =========================================================
+     4. GYM CARD — ANIMATED COUNTERS (runs once, on scroll into view)
+  ========================================================= */
+  const counterEls = document.querySelectorAll('.stat-num');
+  const animateCounter = (el) => {
+    const target = parseFloat(el.dataset.target);
+    const suffix = el.dataset.suffix || '';
+    const duration = 900;
+    const start = performance.now();
+
+    const tick = (now) => {
+      const progress = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const value = Math.round(target * eased);
+      el.textContent = value + suffix;
+      if (progress < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  };
+
+  const counterObserver = new IntersectionObserver((entries, obs) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        animateCounter(entry.target);
+        obs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.6 });
+
+  counterEls.forEach(el => counterObserver.observe(el));
+
+  /* =========================================================
+     5. GUITAR CARD — WORKING METRONOME (Web Audio API)
+  ========================================================= */
+  const metroToggle = document.getElementById('metroToggle');
+  const metroLabel = document.getElementById('metroLabel');
+  const bpmSlider = document.getElementById('bpmSlider');
+  const bpmValue = document.getElementById('bpmValue');
+  const metroPulse = document.getElementById('metroPulse');
+
+  let audioCtx = null;
+  let metroTimer = null;
+  let isPlaying = false;
+  let currentBpm = parseInt(bpmSlider.value, 10);
+
+  const playClick = () => {
+    if (!audioCtx) return;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.frequency.value = 1000;
+    osc.type = 'square';
+    gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.05);
+    osc.connect(gain).connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.05);
+
+    metroPulse.classList.add('pulse-on');
+    setTimeout(() => metroPulse.classList.remove('pulse-on'), 90);
+  };
+
+  const startMetronome = () => {
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    stopMetronome();
+    const interval = 60000 / currentBpm;
+    playClick();
+    metroTimer = setInterval(playClick, interval);
+    isPlaying = true;
+    metroToggle.setAttribute('aria-pressed', 'true');
+    metroLabel.textContent = 'Stop';
+  };
+
+  const stopMetronome = () => {
+    if (metroTimer) clearInterval(metroTimer);
+    metroTimer = null;
+  };
+
+  metroToggle.addEventListener('click', () => {
+    if (isPlaying) {
+      stopMetronome();
+      isPlaying = false;
+      metroToggle.setAttribute('aria-pressed', 'false');
+      metroLabel.textContent = 'Play';
+    } else {
+      startMetronome();
+    }
+  });
+
+  bpmSlider.addEventListener('input', (e) => {
+    currentBpm = parseInt(e.target.value, 10);
+    bpmValue.textContent = currentBpm;
+    if (isPlaying) startMetronome(); // restart at new tempo
+  });
+
+  /* =========================================================
+     6. PSYCHOLOGY CARD — QUOTE / INSIGHT ROTATOR
+  ========================================================= */
+  const insights = [
+    "Every habit is just a decision you no longer have to make.",
+    "The brain treats a repeated thought like a well-worn path — easier each time.",
+    "Motivation follows action more often than it leads it.",
+    "Most anxiety is your brain rehearsing a future that hasn't happened yet.",
+    "Behavior change sticks when identity changes first.",
+    "Attention is the one resource you can't multitask your way around.",
+    "Comparing your chapter one to someone else's chapter twenty rarely ends well."
+  ];
+  let lastIndex = -1;
+  const quoteText = document.getElementById('quoteText');
+  const nextQuoteBtn = document.getElementById('nextQuoteBtn');
+
+  nextQuoteBtn.addEventListener('click', () => {
+    let idx;
+    do {
+      idx = Math.floor(Math.random() * insights.length);
+    } while (idx === lastIndex && insights.length > 1);
+    lastIndex = idx;
+    quoteText.style.opacity = 0;
+    setTimeout(() => {
+      quoteText.textContent = insights[idx];
+      quoteText.style.opacity = 1;
+    }, 150);
+  });
+  quoteText.style.transition = 'opacity .15s ease';
+
+  /* =========================================================
+     7. CONTACT FORM — validation + mailto handoff
+  ========================================================= */
+  const form = document.getElementById('contactForm');
+  const formStatus = document.getElementById('formStatus');
+  const DESTINATION_EMAIL = 'johnmark.bautista@email.com'; // TODO: replace with real email
+
+  const showError = (fieldName, message) => {
+    const field = form.querySelector(`[name="${fieldName}"]`);
+    const errorEl = form.querySelector(`[data-error-for="${fieldName}"]`);
+    field.closest('.field').classList.toggle('has-error', Boolean(message));
+    if (errorEl) errorEl.textContent = message || '';
+  };
+
+  const isValidEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = form.fromName.value.trim();
+    const email = form.fromEmail.value.trim();
+    const message = form.messageBody.value.trim();
+
+    let valid = true;
+    if (!name) { showError('fromName', 'Please enter your name.'); valid = false; }
+    else showError('fromName', '');
+
+    if (!email) { showError('fromEmail', 'Please enter your email.'); valid = false; }
+    else if (!isValidEmail(email)) { showError('fromEmail', 'That email looks off.'); valid = false; }
+    else showError('fromEmail', '');
+
+    if (!message) { showError('messageBody', 'Say something first!'); valid = false; }
+    else showError('messageBody', '');
+
+    if (!valid) {
+      formStatus.textContent = '';
+      return;
+    }
+
+    const subject = encodeURIComponent(`Message from ${name} via your site`);
+    const body = encodeURIComponent(`${message}\n\n— ${name} (${email})`);
+    window.location.href = `mailto:${DESTINATION_EMAIL}?subject=${subject}&body=${body}`;
+
+    formStatus.textContent = 'Opening your email app…';
+    form.reset();
+  });
+
+  /* =========================================================
+     8. COPY EMAIL BUTTON
+  ========================================================= */
+  const copyEmailBtn = document.getElementById('copyEmailBtn');
+  const originalCopyLabel = copyEmailBtn.textContent;
+
+  copyEmailBtn.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(DESTINATION_EMAIL);
+      copyEmailBtn.textContent = 'Copied!';
+    } catch (err) {
+      copyEmailBtn.textContent = 'Copy failed — select manually';
+    }
+    setTimeout(() => { copyEmailBtn.textContent = originalCopyLabel; }, 1800);
+  });
+
+  /* =========================================================
+     9. FOOTER YEAR
+  ========================================================= */
+  document.getElementById('footerYear').textContent = new Date().getFullYear();
+
+});
+
+</script>
 </body>
 </html>
