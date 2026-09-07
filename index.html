@@ -3,30 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DCIT26 Lab 1 - Styled</title>
-    <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f4f9; text-align: center; margin-top: 50px; }
-        .container { background: white; padding: 30px; border-radius: 8px; display: inline-block; box-shadow: 0px 4px 10px rgba(0,0,0,0.1); }
-        button { padding: 10px 20px; font-size: 16px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
-        button:hover { background-color: #0056b3; }
-        #message { margin-top: 20px; font-weight: bold; color: #333; }
-    </style>
+    <title>DCIT26 Lab 1 - Modern Styled</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
         <h1>Welcome to My Webpage</h1>
-        <p>This is the fully styled version with CSS and JavaScript.</p>
+        <p>This is the fully styled version with external CSS and JavaScript components.</p>
         <button id="clickBtn">Click Me!</button>
         <p id="message"></p>
     </div>
 
-    <script>
-        const btn = document.getElementById('clickBtn');
-        const msg = document.getElementById('message');
-        
-        btn.addEventListener('click', function() {
-            msg.textContent = "Success! Dynamic JavaScript is working perfectly!";
-        });
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
