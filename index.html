@@ -3,15 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DCIT26 Lab 1 - Modern Styled</title>
+    <title>DCIT26 Lab 1 - Modern Dashboard</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Welcome to My Webpage</h1>
-        <p>This is the fully styled version with external CSS and JavaScript components.</p>
-        <button id="clickBtn">Click Me!</button>
-        <p id="message"></p>
+    <div class="glass-card">
+        <header>
+            <span class="badge">DCIT-26 Lab Activity</span>
+            <h1>Interactive Webpage</h1>
+            <p>Designed with external CSS, dynamic JavaScript, and responsive layout.</p>
+        </header>
+
+        <main>
+            <div class="interactive-box">
+                <button id="clickBtn">Click to Interact</button>
+                <p id="message">Ready for your action!</p>
+            </div>
+
+            <div class="stats-container">
+                <div class="stat-card">
+                    <h3>Status</h3>
+                    <p id="statusText">Active</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Total Clicks</h3>
+                    <p id="clickCount">0</p>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2026 Student Lab Project</p>
+        </footer>
     </div>
 
     <script src="script.js"></script>
